@@ -1,22 +1,30 @@
-# Mokes.API
+<div align="center">
 
-REST API для управления личными записями с JWT-аутентификацией.
+# 📒 Mokes.API
 
-**Стек:** ASP.NET Core 8 · Minimal API · Entity Framework Core · SQLite · BCrypt · JWT Bearer
+**REST API для управления личными записями с JWT-аутентификацией**
 
----
+![.NET](https://img.shields.io/badge/.NET_8-512BD4?style=flat-square&logo=dotnet&logoColor=white)
+![EF Core](https://img.shields.io/badge/EF_Core-512BD4?style=flat-square&logo=dotnet&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black)
 
-## Возможности
-
-- Регистрация и вход с хешированием паролей через BCrypt
-- JWT-токен передаётся в cookie (`HttpOnly`, `Secure`, `SameSite=Strict`)
-- CRUD для записей (entries) — только свои, чужие не видны
-- Валидация через MiniValidation
-- Swagger UI для тестирования
+</div>
 
 ---
 
-## Быстрый старт
+## ✨ Возможности
+
+- 🔐 **Аутентификация** — регистрация и вход с хешированием паролей через BCrypt
+- 🍪 **Безопасные cookie** — JWT передаётся в `HttpOnly`, `Secure`, `SameSite=Strict`
+- 📝 **CRUD записей** — полное управление своими записями, чужие недоступны
+- ✅ **Валидация** — через MiniValidation
+- 📖 **Swagger UI** — интерактивная документация для тестирования
+
+---
+
+## 🚀 Быстрый старт
 
 ### 1. Клонировать репозиторий
 
@@ -32,27 +40,28 @@ cd Mokes.API
 ```json
 {
   "Jwt": {
-    "Key": "ВАШ_СЕКРЕТНЫЙ_КЛЮЧ_МИНИМУМ_32_СИМВОЛА"
+    "Key": "ВАШ_СЕКРЕТНЫЙ_КЛЮЧ_МИНИМУМ_64_СИМВОЛА"
   }
 }
 ```
 
-> ⚠️ Ключ должен быть **достаточно длинным** (рекомендуется 64+ символа) и случайным.  
-> Файл добавлен в `.gitignore` — в репозиторий не попадёт.
+> [!WARNING]
+> Ключ должен быть **64+ символов** и случайным. Файл добавлен в `.gitignore` — в репозиторий не попадёт.
 
-**Как сгенерировать ключ:**
+<details>
+<summary>💡 Как сгенерировать ключ</summary>
 
-В PowerShell:
+**PowerShell:**
 ```powershell
 [Convert]::ToBase64String((1..64 | ForEach-Object { Get-Random -Maximum 256 }))
 ```
 
-Или в терминале .NET:
+**Через .NET User Secrets:**
 ```bash
 dotnet user-secrets set "Jwt:Key" "ВАШ_КЛЮЧ"
 ```
 
-Или просто придумай длинную случайную строку — главное, чтобы было 64+ символа.
+</details>
 
 ### 3. Применить миграции
 
@@ -66,21 +75,23 @@ dotnet ef database update
 dotnet run
 ```
 
-Swagger откроется по адресу: `https://localhost:{PORT}/swagger`
+> Swagger откроется по адресу: `https://localhost:{PORT}/swagger`
 
 ---
 
-## Эндпоинты
+## 📡 Эндпоинты
 
 ### Аутентификация — `/api/auth`
 
 | Метод | Путь | Описание |
-|-------|------|----------|
+|:---:|---|---|
 | `POST` | `/api/auth/register` | Регистрация |
 | `POST` | `/api/auth/login` | Вход, устанавливает cookie с токеном |
 | `POST` | `/api/auth/logout` | Выход, удаляет cookie |
 
-**Тело запроса для register / login:**
+<details>
+<summary>📋 Тело запроса для register / login</summary>
+
 ```json
 {
   "username": "mmk",
@@ -88,14 +99,14 @@ Swagger откроется по адресу: `https://localhost:{PORT}/swagger`
 }
 ```
 
----
+</details>
 
 ### Записи — `/api/entries` 🔒
 
-Все маршруты требуют авторизации (JWT в cookie).
+> Все маршруты требуют авторизации (JWT в cookie)
 
 | Метод | Путь | Описание |
-|-------|------|----------|
+|:---:|---|---|
 | `GET` | `/api/entries` | Все свои записи |
 | `GET` | `/api/entries/{id}` | Одна запись по ID |
 | `POST` | `/api/entries` | Создать запись |
@@ -104,7 +115,7 @@ Swagger откроется по адресу: `https://localhost:{PORT}/swagger`
 
 ---
 
-## Структура проекта
+## 🗂 Структура проекта
 
 ```
 Mokes.API/
@@ -124,12 +135,12 @@ Mokes.API/
 
 ---
 
-## Зависимости
+## 📦 Зависимости
 
 | Пакет | Версия |
-|-------|--------|
-| `Microsoft.AspNetCore.Authentication.JwtBearer` | 8.0.25 |
-| `Microsoft.EntityFrameworkCore.Sqlite` | 8.0.25 |
-| `BCrypt.Net-Next` | 4.1.0 |
-| `MiniValidation` | 0.9.2 |
-| `Swashbuckle.AspNetCore` | 6.6.2 |
+|---|:---:|
+| `Microsoft.AspNetCore.Authentication.JwtBearer` | `8.0.25` |
+| `Microsoft.EntityFrameworkCore.Sqlite` | `8.0.25` |
+| `BCrypt.Net-Next` | `4.1.0` |
+| `MiniValidation` | `0.9.2` |
+| `Swashbuckle.AspNetCore` | `6.6.2` |
