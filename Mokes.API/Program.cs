@@ -19,7 +19,7 @@ namespace Mokes.API
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=Data/save.db"));
 
-            builder.Services.AddScoped<IEntryServices, EntryServices>();
+            builder.Services.AddScoped<IEntryService, EntryService>();
             builder.Services.AddScoped<IEntryRepository, EntryRepository>();
 
             var app = builder.Build();

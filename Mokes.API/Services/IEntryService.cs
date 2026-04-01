@@ -3,7 +3,7 @@ using Mokes.API.Models;
 
 namespace Mokes.API.Services
 {
-    public interface IEntryServices
+    public interface IEntryService
     {
         Task<List<EntryResponseDTO>> GetAllAsync();
         Task<EntryResponseDTO?> GetByIdAsync(Guid id);

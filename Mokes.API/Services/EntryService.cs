@@ -4,10 +4,10 @@ using Mokes.API.Repositories;
 
 namespace Mokes.API.Services
 {
-    public class EntryServices : IEntryServices
+    public class EntryService : IEntryService
     {
         private readonly IEntryRepository _repository;
-        public EntryServices(IEntryRepository repository)
+        public EntryService(IEntryRepository repository)
         {
             _repository = repository;
         }

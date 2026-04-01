@@ -12,10 +12,10 @@ namespace Mokes.API.Endpoints
         {
             var group = app.MapGroup("/api/entries");
 
-            group.MapGet("/", async (IEntryServices service) => 
+            group.MapGet("/", async (IEntryService service) => 
                 Results.Ok(await service.GetAllAsync()));
 
-            group.MapGet("/{id}", async(IEntryServices service, Guid id) => 
+            group.MapGet("/{id}", async(IEntryService service, Guid id) => 
             {
                 var entry = service.GetByIdAsync(id);
                 if (entry == null)
@@ -23,7 +23,7 @@ namespace Mokes.API.Endpoints
                 return Results.Ok(entry);
             });
 
-            group.MapPost("/", async (IEntryServices service, CreateEntryDTO dto) => 
+            group.MapPost("/", async (IEntryService service, CreateEntryDTO dto) => 
             {
                 if (!MiniValidator.TryValidate(dto, out var errors))
                     return Results.ValidationProblem(errors);
@@ -31,14 +31,14 @@ namespace Mokes.API.Endpoints
                 return Results.Ok(newEntry);
             });
 
-            group.MapDelete("/{id}", async (IEntryServices service, Guid id) =>
+            group.MapDelete("/{id}", async (IEntryService service, Guid id) =>
             {
                 if (!await service.RemoveAsync(id))
                     return Results.NotFound();
                 return Results.Ok();
             });
 
-            group.MapPut("/{id}", async(IEntryServices service, Guid id, UpdateEntryDTO dto) => 
+            group.MapPut("/{id}", async(IEntryService service, Guid id, UpdateEntryDTO dto) => 
             {
                 var entry = await service.UpdateAsync(id, dto);
                 if (entry == null)
