@@ -1,9 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Mokes.API.DataBase;
 using Mokes.API.Endpoints;
-using Mokes.API.Models;
 using Mokes.API.Repositories;
 using Mokes.API.Services;
 

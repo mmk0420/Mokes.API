@@ -6,8 +6,8 @@ namespace Mokes.API.Services
 {
     public class EntryServices : IEntryServices
     {
-        private readonly EntryRepository _repository;
-        public EntryServices(EntryRepository repository)
+        private readonly IEntryRepository _repository;
+        public EntryServices(IEntryRepository repository)
         {
             _repository = repository;
         }
