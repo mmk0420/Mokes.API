@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Mokes.API.DataBase;
 using Mokes.API.Endpoints;
 using Mokes.API.Models;
+using Mokes.API.Repositories;
+using Mokes.API.Services;
 
 namespace Mokes.API
 {
@@ -18,6 +20,9 @@ namespace Mokes.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=Data/save.db"));
+
+            builder.Services.AddScoped<IEntryServices, EntryServices>();
+            builder.Services.AddScoped<IEntryRepository, EntryRepository>();
 
             var app = builder.Build();
 

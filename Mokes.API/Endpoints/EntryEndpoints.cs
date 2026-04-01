@@ -1,4 +1,5 @@
 ﻿using Mokes.API.DataBase;
+using Mokes.API.Services;
 using System.Runtime.CompilerServices;
 
 namespace Mokes.API.Endpoints
@@ -9,10 +10,9 @@ namespace Mokes.API.Endpoints
         {
             var group = app.MapGroup("/api/entries");
 
-            group.MapGet("/", () => 
-            {
-                
-            });
+            group.MapGet("/", async (IEntryServices service) => 
+                Results.Ok(await service.GetAllAsync()));
+            
         }
     }
 }

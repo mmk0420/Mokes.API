@@ -9,6 +9,6 @@ namespace Mokes.API.Services
         Task<EntryResponseDTO?> GetByIdAsync(Guid id);
         Task<EntryResponseDTO> AddAsync(CreateEntryDTO dto);
         Task<bool> RemoveAsync(Guid id);
-        Task<EntryResponseDTO> UpdateAsync(Guid id, UpdateEntryDTO dto);
+        Task<EntryResponseDTO?> UpdateAsync(Guid id, UpdateEntryDTO dto);
     }
 }

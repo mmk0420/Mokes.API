@@ -12,9 +12,24 @@ namespace Mokes.API.Services
             _repository = repository;
         }
 
-        public Task<EntryResponseDTO> AddAsync(CreateEntryDTO dto)
+        public async Task<EntryResponseDTO> AddAsync(CreateEntryDTO dto)
         {
-            throw new NotImplementedException();
+            Entry entry = new Entry
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                Created = DateTime.Now
+            };
+
+            await _repository.AddAsync(entry);
+
+            return new EntryResponseDTO
+            {
+                Name = entry.Name,
+                Decription = entry.Description,
+                Created = entry.Created,
+                Id = entry.Id
+            };
         }
 
         public async Task<List<EntryResponseDTO>> GetAllAsync()
@@ -44,14 +59,32 @@ namespace Mokes.API.Services
             };
         }
 
-        public Task<bool> RemoveAsync(Guid id)
+        public async Task<bool> RemoveAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var entry = await _repository.GetByIdAsync(id);
+            if (entry == null) return false;
+
+            await _repository.RemoveAsync(entry);
+            return true;
         }
 
-        public Task<EntryResponseDTO> UpdateAsync(Guid id, UpdateEntryDTO dto)
+        public async Task<EntryResponseDTO?> UpdateAsync(Guid id, UpdateEntryDTO dto)
         {
-            throw new NotImplementedException();
+            var originalEntry = await _repository.GetByIdAsync(id);
+            if (originalEntry == null) return null;
+
+            originalEntry.Name = dto.Name;
+            originalEntry.Description = dto.Description;
+
+            await _repository.UpdateAsync(originalEntry);
+
+            return new EntryResponseDTO
+            {
+                Id = originalEntry.Id,
+                Name = originalEntry.Name,
+                Decription = originalEntry.Description,
+                Created = originalEntry.Created
+            };
         }
     }
 }

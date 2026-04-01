@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Mokes.API.Configurations;
 using Mokes.API.Models;
 
 namespace Mokes.API.DataBase
