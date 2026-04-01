@@ -14,6 +14,8 @@ namespace Mokes.API.Endpoints
                 if (!MiniValidation.MiniValidator.TryValidate(dto, out var errors))
                     return Results.ValidationProblem(errors);
                 var user = await service.Register(dto);
+                if (user == null)
+                    return Results.Conflict("Пользователь с таким именем уже существует");
                 return Results.Ok(user);
             });
 

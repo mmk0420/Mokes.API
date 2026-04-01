@@ -21,7 +21,7 @@ namespace Mokes.API.Endpoints
             group.MapGet("/{id}", async(IEntryService service, Guid id, HttpContext context) => 
             {
                 var userId = Guid.Parse(context.User.FindFirst("userId").Value);
-                var entry = service.GetByIdAsync(id, userId);
+                var entry = await service.GetByIdAsync(id, userId);
                 if (entry == null)
                     return Results.NotFound();
                 return Results.Ok(entry);

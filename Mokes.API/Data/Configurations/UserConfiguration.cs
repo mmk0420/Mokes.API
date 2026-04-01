@@ -9,6 +9,7 @@ namespace Mokes.API.Data.Configurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.HasKey(u => u.Id);
+            builder.HasIndex(u => u.Username).IsUnique();
 
             builder
                 .HasMany(u => u.Entries)

@@ -25,8 +25,12 @@ namespace Mokes.API.Services
             return token;
         }
 
-        public async Task<UserResponseDTO> Register(RegisterUserDTO dto)
+        public async Task<UserResponseDTO?> Register(RegisterUserDTO dto)
         {
+            var existing = await _repository.GetByUsernameAsync(dto.Username);
+            if (existing != null)
+                return null;
+
             User newUser = new User
             {
                 AccountCreated = DateTime.Now,

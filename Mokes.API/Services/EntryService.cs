@@ -18,7 +18,7 @@ namespace Mokes.API.Services
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                Created = DateTime.Now,
+                Created = DateTime.UtcNow,
                 UserId = userId
             };
 
@@ -27,7 +27,7 @@ namespace Mokes.API.Services
             return new EntryResponseDTO
             {
                 Name = entry.Name,
-                Decription = entry.Description,
+                Description = entry.Description,
                 Created = entry.Created,
                 Id = entry.Id
             };
@@ -41,7 +41,7 @@ namespace Mokes.API.Services
             {
                 Id = e.Id,
                 Name = e.Name,
-                Decription = e.Description,
+                Description = e.Description,
                 Created = e.Created
             }).ToList();
         }
@@ -55,7 +55,7 @@ namespace Mokes.API.Services
             {
                 Id = entry.Id,
                 Name = entry.Name,
-                Decription = entry.Description,
+                Description = entry.Description,
                 Created = entry.Created
             };
         }
@@ -83,7 +83,7 @@ namespace Mokes.API.Services
             {
                 Id = originalEntry.Id,
                 Name = originalEntry.Name,
-                Decription = originalEntry.Description,
+                Description = originalEntry.Description,
                 Created = originalEntry.Created
             };
         }
