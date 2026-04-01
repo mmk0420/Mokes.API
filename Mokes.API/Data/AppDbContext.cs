@@ -10,9 +10,11 @@ namespace Mokes.API.DataBase
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new EntryConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Entry> Entries { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

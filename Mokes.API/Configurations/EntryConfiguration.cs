@@ -9,6 +9,10 @@ namespace Mokes.API.Configurations
         public void Configure(EntityTypeBuilder<Entry> builder)
         {
             builder.HasKey(e => e.Id);
+
+            builder
+                .HasOne(e => e.User)
+                .WithMany(u => u.Entries);
         }
     }
 }

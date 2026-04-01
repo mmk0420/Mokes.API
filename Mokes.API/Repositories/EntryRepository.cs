@@ -6,37 +6,37 @@ namespace Mokes.API.Repositories
 {
     public class EntryRepository : IEntryRepository
     {
-        private readonly AppDbContext _db;
-        public EntryRepository(AppDbContext db)
+        private readonly AppDbContext _database;
+        public EntryRepository(AppDbContext database)
         {
-            _db = db;
+            _database = database;
         }
         public async Task AddAsync(Entry entry)
         {
-            _db.Entries.Add(entry);
-            await _db.SaveChangesAsync();
+            _database.Entries.Add(entry);
+            await _database.SaveChangesAsync();
         }
 
         public async Task RemoveAsync(Entry entry)
         {
-            _db.Entries.Remove(entry);
-            await _db.SaveChangesAsync();
+            _database.Entries.Remove(entry);
+            await _database.SaveChangesAsync();
         }
 
         public async Task<List<Entry>> GetAllAsync()
         {
-            return await _db.Entries.ToListAsync();
+            return await _database.Entries.ToListAsync();
         }
 
         public async Task<Entry?> GetByIdAsync(Guid id)
         {
-            return await _db.Entries.FindAsync(id);
+            return await _database.Entries.FindAsync(id);
         }
 
         public async Task UpdateAsync(Entry entry)
         {
-            _db.Entries.Update(entry);
-            await _db.SaveChangesAsync();
+            _database.Entries.Update(entry);
+            await _database.SaveChangesAsync();
         }
     }
 }
