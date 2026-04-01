@@ -7,5 +7,6 @@
         public string Description { get; set; }
         public DateTime Created { get; set; }
         public User User { get; set; }
+        public Guid UserId { get; set; }
     }
 }

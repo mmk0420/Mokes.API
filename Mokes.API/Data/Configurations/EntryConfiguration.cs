@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Mokes.API.Models;
 
-namespace Mokes.API.Configurations
+namespace Mokes.API.Data.Configurations
 {
     public class EntryConfiguration : IEntityTypeConfiguration<Entry>
     {

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Mokes.API.Models;
 
-namespace Mokes.API.Configurations
+namespace Mokes.API.Data.Configurations
 {
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {
@@ -12,7 +12,8 @@ namespace Mokes.API.Configurations
 
             builder
                 .HasMany(u => u.Entries)
-                .WithOne(e => e.User);
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserId);
         }
     }
 }

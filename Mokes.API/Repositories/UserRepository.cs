@@ -20,12 +20,16 @@ namespace Mokes.API.Repositories
 
         public async Task<User?> GetByIdAsync(Guid id)
         {
-            return await _database.Users.FindAsync(id);
+            return await _database.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<User?> GetByUsernameAsync(string username)
         {
-            return await _database.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return await _database.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Username == username);
         }
 
         public async Task RemoveAsync(User user)
