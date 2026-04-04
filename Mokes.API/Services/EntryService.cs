@@ -35,21 +35,24 @@ namespace Mokes.API.Services
 
         public async Task<List<EntryResponseDTO>> GetAllAsync(Guid userId)
         {
-            var entries = await _repository.GetAllAsync(userId);
+            var entries = await _repository.GetAllAsync();
 
-            return entries.Select(e => new EntryResponseDTO
-            {
-                Id = e.Id,
-                Name = e.Name,
-                Description = e.Description,
-                Created = e.Created
-            }).ToList();
+            return entries
+                .Where(e => e.UserId == userId)
+                    .Select(e => new EntryResponseDTO
+                    {
+                        Id = e.Id,
+                        Name = e.Name,
+                        Description = e.Description,
+                        Created = e.Created
+                    })
+                        .ToList();
         }
 
         public async Task<EntryResponseDTO?> GetByIdAsync(Guid id, Guid userId)
         {
-            var entry = await _repository.GetByIdAsync(id, userId);
-            if (entry == null) return null;
+            var entry = await _repository.GetByIdAsync(id);
+            if (entry == null || entry.UserId != userId) return null;
 
             return new EntryResponseDTO
             {
@@ -62,8 +65,8 @@ namespace Mokes.API.Services
 
         public async Task<bool> RemoveAsync(Guid id, Guid userId)
         {
-            var entry = await _repository.GetByIdAsync(id, userId);
-            if (entry == null) return false;
+            var entry = await _repository.GetByIdAsync(id);
+            if (entry == null || entry.UserId != userId) return false;
 
             await _repository.RemoveAsync(entry);
             return true;
@@ -71,20 +74,20 @@ namespace Mokes.API.Services
 
         public async Task<EntryResponseDTO?> UpdateAsync(Guid id, UpdateEntryDTO dto, Guid userId)
         {
-            var originalEntry = await _repository.GetByIdAsync(id, userId);
-            if (originalEntry == null) return null;
+            var entry = await _repository.GetByIdAsync(id);
+            if (entry == null || entry.UserId != userId) return null;
 
-            originalEntry.Name = dto.Name;
-            originalEntry.Description = dto.Description;
+            entry.Name = dto.Name;
+            entry.Description = dto.Description;
 
-            await _repository.UpdateAsync(originalEntry);
+            await _repository.UpdateAsync(entry);
 
             return new EntryResponseDTO
             {
-                Id = originalEntry.Id,
-                Name = originalEntry.Name,
-                Description = originalEntry.Description,
-                Created = originalEntry.Created
+                Id = entry.Id,
+                Name = entry.Name,
+                Description = entry.Description,
+                Created = entry.Created
             };
         }
     }

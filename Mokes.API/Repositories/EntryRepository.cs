@@ -23,19 +23,17 @@ namespace Mokes.API.Repositories
             await _database.SaveChangesAsync();
         }
 
-        public async Task<List<Entry>> GetAllAsync(Guid userId)
+        public async Task<List<Entry>> GetAllAsync()
         {
             return await _database.Entries
                 .AsNoTracking()
-                .Where(e => e.UserId == userId)
                 .ToListAsync();
         }
 
-        public async Task<Entry?> GetByIdAsync(Guid id, Guid userId)
+        public async Task<Entry?> GetByIdAsync(Guid id)
         {
             return await _database.Entries
                 .AsNoTracking()
-                .Where(e => e.UserId == userId)
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
