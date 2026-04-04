@@ -7,7 +7,7 @@ namespace Mokes.API.Endpoints
     {
         public static void MapAuthEndpoints(this WebApplication app)
         {
-            var group = app.MapGroup("/api/auth");
+            var group = app.MapGroup("/auth");
 
             group.MapPost("/register", async (RegisterUserDTO dto, IAuthService service) => 
             {

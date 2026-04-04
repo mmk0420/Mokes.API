@@ -9,7 +9,7 @@ namespace Mokes.API.Endpoints
     {
         public static void MapEntryEndpoints(this WebApplication app)
         {
-            var group = app.MapGroup("/api/entries")
+            var group = app.MapGroup("/entries")
                 .RequireAuthorization();
 
             group.MapGet("/", async (IEntryService service, HttpContext context) =>
@@ -22,9 +22,20 @@ namespace Mokes.API.Endpoints
             {
                 var userId = Guid.Parse(context.User.FindFirst("userId").Value);
                 var entry = await service.GetByIdAsync(id, userId);
-                if (entry == null)
-                    return Results.NotFound();
-                return Results.Ok(entry);
+                return entry == null ? Results.NotFound() : Results.Ok(entry);
+            });
+
+            group.MapGet("/removed", async (IEntryService service, HttpContext context) =>
+            {
+                var userId = Guid.Parse(context.User.FindFirst("userId").Value);
+                return Results.Ok(await service.GetAllRemovedAsync(userId));
+            });
+
+            group.MapGet("/removed/{id}", async (IEntryService service, Guid id, HttpContext context) =>
+            {
+                var userId = Guid.Parse(context.User.FindFirst("userId").Value);
+                var entry = await service.GetRemovedByIdAsync(id, userId);
+                return entry == null ? Results.NotFound() : Results.Ok(entry);
             });
 
             group.MapPost("/", async (IEntryService service, CreateEntryDTO dto, HttpContext context) => 
@@ -36,21 +47,31 @@ namespace Mokes.API.Endpoints
                 return Results.Ok(newEntry);
             });
 
+            group.MapPost("/removed/{id}", async (IEntryService service, Guid id, HttpContext context) =>
+            {
+                var userId = Guid.Parse(context.User.FindFirst("userId").Value);
+                var entry = await service.ReturnEntry(id, userId);
+                return entry == null ? Results.NotFound() : Results.Ok(entry);
+            });
+
             group.MapDelete("/{id}", async (IEntryService service, Guid id, HttpContext context) =>
             {
                 var userId = Guid.Parse(context.User.FindFirst("userId").Value);
-                if (!await service.RemoveAsync(id, userId))
-                    return Results.NotFound();
-                return Results.Ok();
+                var entry =  await service.RemoveAsync(id, userId);
+                return entry == null ? Results.Ok(entry) : Results.NotFound();
+            });
+
+            group.MapDelete("/removed/{id}", async (IEntryService service, Guid id, HttpContext context) =>
+            {
+                var userId = Guid.Parse(context.User.FindFirst("userId").Value);
+                return await service.DeleteAsync(id, userId) ? Results.Ok() : Results.NotFound();
             });
 
             group.MapPut("/{id}", async(IEntryService service, Guid id, UpdateEntryDTO dto, HttpContext context) => 
             {
                 var userId = Guid.Parse(context.User.FindFirst("userId").Value);
                 var entry = await service.UpdateAsync(id, dto, userId);
-                if (entry == null)
-                    return Results.NotFound();
-                return Results.Ok(entry);
+                return entry == null ? Results.NotFound() : Results.Ok(entry);
             });
         }
     }
