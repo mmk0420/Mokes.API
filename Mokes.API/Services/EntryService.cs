@@ -29,7 +29,7 @@ namespace Mokes.API.Services
 
         public async Task<EntryResponseDTO?> GetRemovedByIdAsync(Guid id, Guid userId)
         {
-            var entry = await _repository.GetByIdAsync(id, userId);
+            var entry = await _repository.GetRemovedByIdAsync(id, userId);
             if (entry == null) return null;
 
             return new EntryResponseDTO
@@ -101,6 +101,8 @@ namespace Mokes.API.Services
             if (entry == null) return null;
 
             entry.DeletedAt = DateTime.UtcNow;
+            await _repository.UpdateAsync(entry);
+            
             return new EntryResponseDTO
             {
                 Id = entry.Id,

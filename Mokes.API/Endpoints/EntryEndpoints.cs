@@ -35,7 +35,7 @@ namespace Mokes.API.Endpoints
             {
                 var userId = Guid.Parse(context.User.FindFirst("userId").Value);
                 var entry = await service.GetRemovedByIdAsync(id, userId);
-                return entry == null ? Results.NotFound() : Results.Ok(entry);
+                return entry != null ? Results.Ok(entry) : Results.NotFound();
             });
 
             group.MapPost("/", async (IEntryService service, CreateEntryDTO dto, HttpContext context) => 
@@ -58,7 +58,7 @@ namespace Mokes.API.Endpoints
             {
                 var userId = Guid.Parse(context.User.FindFirst("userId").Value);
                 var entry =  await service.RemoveAsync(id, userId);
-                return entry == null ? Results.Ok(entry) : Results.NotFound();
+                return entry == null ? Results.NotFound() : Results.Ok(entry);
             });
 
             group.MapDelete("/removed/{id}", async (IEntryService service, Guid id, HttpContext context) =>

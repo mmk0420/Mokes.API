@@ -46,7 +46,7 @@ namespace Mokes.API.Repositories
         {
             return await _database.Entries
                 .AsNoTracking()
-                .Where(e => e.UserId == userId)
+                .Where(e => e.UserId == userId && e.DeletedAt == null)
                 .ToListAsync();
         }
 
@@ -54,7 +54,7 @@ namespace Mokes.API.Repositories
         {
             return await _database.Entries
                 .AsNoTracking()
-                .Where(e => e.UserId == userId)
+                .Where(e => e.UserId == userId && e.DeletedAt == null)
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
