@@ -14,7 +14,7 @@ namespace Mokes.API.Repositories
             _database = database;
         }
 
-        public async Task<List<Entry>> GetAllRemovedAsync(Guid userId)
+        public async Task<List<Entry>> GetAllBelongingToUserRemovedAsync(Guid userId)
         {
             return await _database.Entries
                 .AsNoTracking()
@@ -22,7 +22,7 @@ namespace Mokes.API.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Entry?> GetRemovedByIdAsync(Guid id, Guid userId)
+        public async Task<Entry?> GetByIdBelongingToUserRemovedAsync(Guid id, Guid userId)
         {
             return await _database.Entries
                 .AsNoTracking()
@@ -42,7 +42,7 @@ namespace Mokes.API.Repositories
             await _database.SaveChangesAsync();
         }
 
-        public async Task<List<Entry>> GetAllAsync(Guid userId)
+        public async Task<List<Entry>> GetAllBelongingToUserAsync(Guid userId)
         {
             return await _database.Entries
                 .AsNoTracking()
@@ -50,7 +50,7 @@ namespace Mokes.API.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Entry?> GetByIdAsync(Guid id, Guid userId)
+        public async Task<Entry?> GetByIdBelongingToUserAsync(Guid id, Guid userId)
         {
             return await _database.Entries
                 .AsNoTracking()

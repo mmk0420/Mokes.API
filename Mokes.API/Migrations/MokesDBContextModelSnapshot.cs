@@ -68,11 +68,19 @@ namespace Mokes.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tags");
                 });
@@ -132,9 +140,22 @@ namespace Mokes.API.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Mokes.API.Models.Tag", b =>
+                {
+                    b.HasOne("Mokes.API.Models.User", "User")
+                        .WithMany("Tags")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Mokes.API.Models.User", b =>
                 {
                     b.Navigation("Entries");
+
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

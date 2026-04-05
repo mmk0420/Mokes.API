@@ -13,5 +13,9 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
         builder
             .HasMany(t => t.Entries)
             .WithMany(e => e.Tags);
+        
+        builder
+            .HasOne(t => t.User)
+            .WithMany(u => u.Tags);
     }
 }

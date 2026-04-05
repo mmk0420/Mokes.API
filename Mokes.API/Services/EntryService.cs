@@ -14,7 +14,7 @@ namespace Mokes.API.Services
 
         public async Task<List<EntryResponseDTO>> GetAllRemovedAsync(Guid userId)
         {
-            var entries = await _repository.GetAllRemovedAsync(userId);
+            var entries = await _repository.GetAllBelongingToUserRemovedAsync(userId);
             
             return entries
                 .Select(e => new EntryResponseDTO
@@ -29,7 +29,7 @@ namespace Mokes.API.Services
 
         public async Task<EntryResponseDTO?> GetRemovedByIdAsync(Guid id, Guid userId)
         {
-            var entry = await _repository.GetRemovedByIdAsync(id, userId);
+            var entry = await _repository.GetByIdBelongingToUserRemovedAsync(id, userId);
             if (entry == null) return null;
 
             return new EntryResponseDTO
@@ -67,7 +67,7 @@ namespace Mokes.API.Services
 
         public async Task<List<EntryResponseDTO>> GetAllAsync(Guid userId)
         {
-            var entries = await _repository.GetAllAsync(userId);
+            var entries = await _repository.GetAllBelongingToUserAsync(userId);
 
             return entries
                     .Select(e => new EntryResponseDTO
@@ -82,7 +82,7 @@ namespace Mokes.API.Services
 
         public async Task<EntryResponseDTO?> GetByIdAsync(Guid id, Guid userId)
         {
-            var entry = await _repository.GetByIdAsync(id, userId);
+            var entry = await _repository.GetByIdBelongingToUserAsync(id, userId);
             if (entry == null) return null;
 
             return new EntryResponseDTO
@@ -97,7 +97,7 @@ namespace Mokes.API.Services
 
         public async Task<EntryResponseDTO?> RemoveAsync(Guid id, Guid userId)
         {
-            var entry = await _repository.GetByIdAsync(id, userId);
+            var entry = await _repository.GetByIdBelongingToUserAsync(id, userId);
             if (entry == null) return null;
 
             entry.DeletedAt = DateTime.UtcNow;
@@ -115,7 +115,7 @@ namespace Mokes.API.Services
 
         public async Task<bool> DeleteAsync(Guid id, Guid userId)
         {
-            var entry = await _repository.GetRemovedByIdAsync(id, userId);
+            var entry = await _repository.GetByIdBelongingToUserRemovedAsync(id, userId);
             if (entry == null) return false;
             
             await _repository.DeleteAsync(entry);
@@ -125,7 +125,7 @@ namespace Mokes.API.Services
 
         public async Task<EntryResponseDTO?> UpdateAsync(Guid id, UpdateEntryDTO dto, Guid userId)
         {
-            var entry = await _repository.GetByIdAsync(id, userId);
+            var entry = await _repository.GetByIdBelongingToUserAsync(id, userId);
             if (entry == null) return null;
 
             entry.Name = dto.Name;
@@ -145,7 +145,7 @@ namespace Mokes.API.Services
 
         public async Task<EntryResponseDTO?> ReturnEntry(Guid id, Guid userId)
         {
-            var entry = await _repository.GetRemovedByIdAsync(id, userId);
+            var entry = await _repository.GetByIdBelongingToUserRemovedAsync(id, userId);
             if (entry == null) return null;
 
             entry.DeletedAt = null;
