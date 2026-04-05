@@ -9,5 +9,6 @@
         public User User { get; set; }
         public Guid UserId { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public List<Tag> Tags { get; set; }
     }
 }

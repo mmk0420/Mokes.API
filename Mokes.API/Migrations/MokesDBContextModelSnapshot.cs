@@ -17,6 +17,21 @@ namespace Mokes.API.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.25");
 
+            modelBuilder.Entity("EntryTag", b =>
+                {
+                    b.Property<Guid>("EntriesId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("EntriesId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("EntryTag");
+                });
+
             modelBuilder.Entity("Mokes.API.Models.Entry", b =>
                 {
                     b.Property<Guid>("Id")
@@ -47,6 +62,21 @@ namespace Mokes.API.Migrations
                     b.ToTable("Entries");
                 });
 
+            modelBuilder.Entity("Mokes.API.Models.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
+                });
+
             modelBuilder.Entity("Mokes.API.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -74,6 +104,21 @@ namespace Mokes.API.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("EntryTag", b =>
+                {
+                    b.HasOne("Mokes.API.Models.Entry", null)
+                        .WithMany()
+                        .HasForeignKey("EntriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mokes.API.Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Mokes.API.Models.Entry", b =>

@@ -11,9 +11,11 @@ namespace Mokes.API.DataBase
         {
             modelBuilder.ApplyConfiguration(new EntryConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new TagConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
+        public DbSet<Tag> Tags { get; set; }
         public DbSet<Entry> Entries { get; set; }
         public DbSet<User> Users { get; set; }
     }
