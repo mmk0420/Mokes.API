@@ -1,10 +1,10 @@
 ﻿namespace Mokes.API.Utils
 {
-    public class PasswordHasher
+    public class PasswordHasher : IPasswordHasher
     {
-        public static string Hash(string password) =>
+        public string Hash(string password) =>
             BCrypt.Net.BCrypt.EnhancedHashPassword(password);
-        public static bool Verify(string password, string hashedPassword) =>
-            BCrypt.Net.BCrypt.EnhancedVerify(password, hashedPassword);
+        public bool Verify(string password, string hashPassword) =>
+            BCrypt.Net.BCrypt.EnhancedVerify(password, hashPassword);
     }
 }

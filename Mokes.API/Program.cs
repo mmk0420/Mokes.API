@@ -1,11 +1,16 @@
 
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
-using Mokes.API.DataBase;
+using Mokes.API.Data;
 using Mokes.API.Endpoints;
 using Mokes.API.Extensions;
 using Mokes.API.Repositories;
+using Mokes.API.Repositories.Entry;
+using Mokes.API.Repositories.Token;
+using Mokes.API.Repositories.User;
 using Mokes.API.Services;
+using Mokes.API.Services.Auth;
+using Mokes.API.Services.Entry;
 using Mokes.API.Utils;
 
 namespace Mokes.API
@@ -26,7 +31,10 @@ namespace Mokes.API
             builder.Services.AddScoped<IEntryRepository, EntryRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<IJWTGenerator, JWTGenerator>();
+            builder.Services.AddScoped<IJwtHelper, JwtHelper>();
+            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
             builder.Configuration.AddJsonFile("secret.json", optional: true);
 

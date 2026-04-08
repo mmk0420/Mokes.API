@@ -1,5 +1,7 @@
 ﻿using Mokes.API.DTOs;
+using Mokes.API.DTOs.User;
 using Mokes.API.Services;
+using Mokes.API.Services.Auth;
 
 namespace Mokes.API.Endpoints
 {
@@ -9,32 +11,55 @@ namespace Mokes.API.Endpoints
         {
             var group = app.MapGroup("/auth");
 
-            group.MapPost("/register", async (RegisterUserDTO dto, IAuthService service) => 
+            group.MapPost("/register", async (RegisterUserDto dto, IAuthService service) => 
             {
                 if (!MiniValidation.MiniValidator.TryValidate(dto, out var errors))
                     return Results.ValidationProblem(errors);
                 var user = await service.Register(dto);
-                if (user == null)
-                    return Results.Conflict("Пользователь с таким именем уже существует");
-                return Results.Ok(user);
+                return user == null ? Results.Conflict("Пользователь с таким именем уже существует") : Results.Ok(user);
             });
 
-            group.MapPost("/login", async (LoginUserDTO dto, IAuthService service, HttpContext context) => 
+            group.MapPost("/login", async (
+                LoginUserDto dto, 
+                IAuthService authService, 
+                HttpContext context, 
+                IConfiguration config,
+                ITokenService tokenService) =>
             {
-                var token = await service.Login(dto);
-                if (token == null)
-                    return Results.BadRequest("Неверный логин или пароль");
+                var tokens = await authService.Login(dto);
+                if (tokens == null)
+                    return Results.BadRequest();
 
-                context.Response.Cookies.Append("dont-play-with-cookie", token);
+                var authToken = tokens.Value.Item1;
+                var refreshToken = tokens.Value.Item2;
 
-                return Results.Ok(token);
+                context.Response.Cookies.Append(config["Cookie:Auth"]!, authToken);
+                context.Response.Cookies.Append(config["Cookie:Refresh"]!, refreshToken.ToString());
+
+                return Results.Ok(tokens);
             });
 
-            group.MapPost("/logout", (HttpContext context) => 
+            group.MapPost("/logout", (HttpContext context, IConfiguration config) => 
             {
-                context.Response.Cookies.Delete("dont-play-with-cookie");
+                context.Response.Cookies.Delete(config["Cookie:Auth"]!);
+                context.Response.Cookies.Delete(config["Cookie:Refresh"]!);
             });
 
+            group.MapPost("/refresh", async (ITokenService tokenService, HttpContext context, IConfiguration config) =>
+            {
+                var refreshToken = context.Request.Cookies[config["Cookie:Refresh"]!];
+                if  (refreshToken == null)
+                    return Results.Unauthorized();
+                
+                var newToken = await tokenService.AuthTokenRefreshAsyns(Guid.Parse(refreshToken));
+                if (newToken == null)
+                    return Results.Unauthorized();
+                
+                context.Response.Cookies.Delete(config["Cookie:Auth"]!);
+                context.Response.Cookies.Append(config["Cookie:Auth"]!, newToken);
+                
+                return Results.Ok();
+            });
         }
     }
 }

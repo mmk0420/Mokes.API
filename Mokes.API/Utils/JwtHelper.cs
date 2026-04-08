@@ -5,24 +5,24 @@ using System.Security.Claims;
 using System.Text;
 namespace Mokes.API.Utils
 {
-    public class JWTGenerator : IJWTGenerator
+    public class JwtHelper : IJwtHelper
     {
         private readonly IConfiguration _configuration;
-        public JWTGenerator(IConfiguration configuration)
+        public JwtHelper(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        public string GenerateToken(User user)
+        public string GenerateAuthToken(Guid userId)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-                new Claim("userId", user.Id.ToString())
+                new Claim("userId", userId.ToString())
             };
 
             var token = new JwtSecurityToken
-                (expires: DateTime.UtcNow.AddDays(1),
+                (expires: DateTime.UtcNow.AddMinutes(1),
                 signingCredentials: credentials,
                 claims: claims);
 

@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Mokes.API.DataBase;
+using Mokes.API.Data;
 
 #nullable disable
 
@@ -16,21 +16,6 @@ namespace Mokes.API.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.25");
-
-            modelBuilder.Entity("EntryTag", b =>
-                {
-                    b.Property<Guid>("EntriesId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("TagsId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("EntriesId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("EntryTag");
-                });
 
             modelBuilder.Entity("Mokes.API.Models.Entry", b =>
                 {
@@ -62,17 +47,19 @@ namespace Mokes.API.Migrations
                     b.ToTable("Entries");
                 });
 
-            modelBuilder.Entity("Mokes.API.Models.Tag", b =>
+            modelBuilder.Entity("Mokes.API.Models.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("DeletedAt")
+                    b.Property<DateTime>("Expires")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("Token")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
@@ -82,7 +69,7 @@ namespace Mokes.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tags");
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Mokes.API.Models.User", b =>
@@ -114,21 +101,6 @@ namespace Mokes.API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("EntryTag", b =>
-                {
-                    b.HasOne("Mokes.API.Models.Entry", null)
-                        .WithMany()
-                        .HasForeignKey("EntriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Mokes.API.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Mokes.API.Models.Entry", b =>
                 {
                     b.HasOne("Mokes.API.Models.User", "User")
@@ -140,10 +112,10 @@ namespace Mokes.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Mokes.API.Models.Tag", b =>
+            modelBuilder.Entity("Mokes.API.Models.RefreshToken", b =>
                 {
                     b.HasOne("Mokes.API.Models.User", "User")
-                        .WithMany("Tags")
+                        .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -155,7 +127,7 @@ namespace Mokes.API.Migrations
                 {
                     b.Navigation("Entries");
 
-                    b.Navigation("Tags");
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

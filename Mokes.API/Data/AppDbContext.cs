@@ -2,7 +2,7 @@
 using Mokes.API.Data.Configurations;
 using Mokes.API.Models;
 
-namespace Mokes.API.DataBase
+namespace Mokes.API.Data
 {
     public class AppDbContext : DbContext
     {
@@ -11,12 +11,12 @@ namespace Mokes.API.DataBase
         {
             modelBuilder.ApplyConfiguration(new EntryConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
-            modelBuilder.ApplyConfiguration(new TagConfiguration());
-
+            modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
+            
             base.OnModelCreating(modelBuilder);
         }
-        public DbSet<Tag> Tags { get; set; }
         public DbSet<Entry> Entries { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

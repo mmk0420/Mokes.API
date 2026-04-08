@@ -1,6 +1,4 @@
-﻿using Mokes.API.DTOs;
-
-namespace Mokes.API.Models
+﻿namespace Mokes.API.Models
 {
     public class User
     {
@@ -10,6 +8,6 @@ namespace Mokes.API.Models
         public string HashedPassword { get; set; }
         public DateTime AccountCreated { get; set; }
         public List<Entry> Entries { get; set; }
-        public List<Tag> Tags { get; set; }
+        public List<RefreshToken> RefreshTokens { get; set; }
     }
 }

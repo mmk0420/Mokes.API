@@ -1,20 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Mokes.API.DataBase;
-using Mokes.API.Models;
+using Mokes.API.Data;
 
-namespace Mokes.API.Repositories
+namespace Mokes.API.Repositories.Entry
 {
     public class EntryRepository : IEntryRepository
     {
         private readonly AppDbContext _database;
-        private IEntryRepository _entryRepositoryImplementation;
-
         public EntryRepository(AppDbContext database)
         {
             _database = database;
         }
 
-        public async Task<List<Entry>> GetAllBelongingToUserRemovedAsync(Guid userId)
+        public async Task<List<Models.Entry>> GetAllBelongingToUserRemovedAsync(Guid userId)
         {
             return await _database.Entries
                 .AsNoTracking()
@@ -22,7 +19,7 @@ namespace Mokes.API.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Entry?> GetByIdBelongingToUserRemovedAsync(Guid id, Guid userId)
+        public async Task<Models.Entry?> GetByIdBelongingToUserRemovedAsync(Guid id, Guid userId)
         {
             return await _database.Entries
                 .AsNoTracking()
@@ -30,19 +27,19 @@ namespace Mokes.API.Repositories
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task AddAsync(Entry entry)
+        public async Task AddAsync(Models.Entry entry)
         {
             _database.Entries.Add(entry);
             await _database.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Entry entry)
+        public async Task DeleteAsync(Models.Entry entry)
         {
             _database.Entries.Remove(entry);
             await _database.SaveChangesAsync();
         }
 
-        public async Task<List<Entry>> GetAllBelongingToUserAsync(Guid userId)
+        public async Task<List<Models.Entry>> GetAllBelongingToUserAsync(Guid userId)
         {
             return await _database.Entries
                 .AsNoTracking()
@@ -50,7 +47,7 @@ namespace Mokes.API.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Entry?> GetByIdBelongingToUserAsync(Guid id, Guid userId)
+        public async Task<Models.Entry?> GetByIdBelongingToUserAsync(Guid id, Guid userId)
         {
             return await _database.Entries
                 .AsNoTracking()
@@ -58,7 +55,7 @@ namespace Mokes.API.Repositories
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task UpdateAsync(Entry entry)
+        public async Task UpdateAsync(Models.Entry entry)
         {
             _database.Entries.Update(entry);
             await _database.SaveChangesAsync();

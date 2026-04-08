@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Jwt options
 secret.json
+
+# Database
+*.db

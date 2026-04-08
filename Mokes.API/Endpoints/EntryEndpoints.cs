@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MiniValidation;
 using Mokes.API.DTOs;
+using Mokes.API.DTOs.Entry;
 using Mokes.API.Services;
+using Mokes.API.Services.Entry;
 
 namespace Mokes.API.Endpoints
 {
@@ -38,7 +40,7 @@ namespace Mokes.API.Endpoints
                 return entry != null ? Results.Ok(entry) : Results.NotFound();
             });
 
-            group.MapPost("/", async (IEntryService service, CreateEntryDTO dto, HttpContext context) => 
+            group.MapPost("/", async (IEntryService service, CreateEntryDto dto, HttpContext context) => 
             {
                 if (!MiniValidator.TryValidate(dto, out var errors))
                     return Results.ValidationProblem(errors);
@@ -50,7 +52,7 @@ namespace Mokes.API.Endpoints
             group.MapPost("/removed/{id}", async (IEntryService service, Guid id, HttpContext context) =>
             {
                 var userId = Guid.Parse(context.User.FindFirst("userId").Value);
-                var entry = await service.ReturnEntry(id, userId);
+                var entry = await service.ReturnRemovedEntry(id, userId);
                 return entry == null ? Results.NotFound() : Results.Ok(entry);
             });
 
@@ -67,7 +69,7 @@ namespace Mokes.API.Endpoints
                 return await service.DeleteAsync(id, userId) ? Results.Ok() : Results.NotFound();
             });
 
-            group.MapPut("/{id}", async(IEntryService service, Guid id, UpdateEntryDTO dto, HttpContext context) => 
+            group.MapPut("/{id}", async(IEntryService service, Guid id, UpdateEntryDto dto, HttpContext context) => 
             {
                 var userId = Guid.Parse(context.User.FindFirst("userId").Value);
                 var entry = await service.UpdateAsync(id, dto, userId);

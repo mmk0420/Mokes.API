@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Mokes.API.DataBase;
-using Mokes.API.Models;
+using Mokes.API.Data;
 
-namespace Mokes.API.Repositories
+namespace Mokes.API.Repositories.User
 {
     public class UserRepository : IUserRepository
     {
@@ -12,33 +11,33 @@ namespace Mokes.API.Repositories
             _database = database;
         }
 
-        public async Task AddAsync(User user)
+        public async Task AddAsync(Models.User user)
         {
             _database.Users.Add(user);
             await _database.SaveChangesAsync();
         }
 
-        public async Task<User?> GetByIdAsync(Guid id)
+        public async Task<Models.User?> GetByIdAsync(Guid id)
         {
             return await _database.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<User?> GetByUsernameAsync(string username)
+        public async Task<Models.User?> GetByUsernameAsync(string username)
         {
             return await _database.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Username == username);
         }
 
-        public async Task RemoveAsync(User user)
+        public async Task RemoveAsync(Models.User user)
         {
             _database.Users.Remove(user);
             await _database.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(User user)
+        public async Task UpdateAsync(Models.User user)
         {
             _database.Users.Update(user);
             await _database.SaveChangesAsync();

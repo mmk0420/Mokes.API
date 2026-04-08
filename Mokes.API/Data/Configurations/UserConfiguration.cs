@@ -15,11 +15,6 @@ namespace Mokes.API.Data.Configurations
                 .HasMany(u => u.Entries)
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId);
-
-            builder
-                .HasMany(u => u.Tags)
-                .WithOne(t => t.User)
-                .HasForeignKey(t => t.UserId);
         }
     }
 }
