@@ -19,21 +19,32 @@ namespace Mokes.API.Services.Auth
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<(string authToken, string refreshToken)?> Login(LoginUserDto dto)
+        public async Task<Result<(string authToken, string refreshToken)>> Login(LoginUserDto dto)
         {
             var user = await _repository.GetByUsernameAsync(dto.Username);
             if (user == null || !_passwordHasher.Verify(dto.Password, user.HashedPassword))
-                return null;
-
+            {
+                return new Result<(string authToken, string refreshToken)>
+                {
+                    Error = "Неверный логин или пароль",
+                    StatusCode = 401,
+                };
+            }
             var refreshToken = await _tokenService.GenerateRefreshTokenAsync(user.Id);
-            if (refreshToken == null)
-                return null;
             
             var authToken = await _tokenService.AuthTokenRefreshAsync(refreshToken);
-            if (authToken == null)
-                return null;
-            
-            return (authToken, refreshToken);
+            if (!authToken.IsSuccess)
+                return new Result<(string authToken, string refreshToken)>
+                {
+                    Error = authToken.Error,
+                    StatusCode = authToken.StatusCode,
+                };
+
+            return new Result<(string authToken, string refreshToken)>
+            {
+                StatusCode = authToken.StatusCode,
+                Value = (authToken.Value, refreshToken)!
+            };
         }
 
         public async Task<UserResponseDto?> Register(RegisterUserDto dto)

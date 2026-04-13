@@ -1,6 +1,4 @@
-﻿using Mokes.API.DTOs;
-using Mokes.API.DTOs.User;
-using Mokes.API.Services;
+﻿using Mokes.API.DTOs.User;
 using Mokes.API.Services.Auth;
 
 namespace Mokes.API.Endpoints
@@ -23,18 +21,25 @@ namespace Mokes.API.Endpoints
                 LoginUserDto dto, 
                 IAuthService authService, 
                 HttpContext context, 
-                IConfiguration config,
-                ITokenService tokenService) =>
+                IConfiguration config) =>
             {
                 var tokens = await authService.Login(dto);
-                if (tokens == null)
-                    return Results.BadRequest();
-
+                if (!tokens.IsSuccess)
+                {
+                    switch (tokens.StatusCode)
+                    {
+                        case 401:
+                            return Results.Unauthorized();
+                        case 502:
+                            return Results.BadRequest(tokens.Error);
+                    }
+                }
+                
                 var authToken = tokens.Value.Item1;
                 var refreshToken = tokens.Value.Item2;
 
                 context.Response.Cookies.Append(config["Cookie:Auth"]!, authToken);
-                context.Response.Cookies.Append(config["Cookie:Refresh"]!, refreshToken.ToString());
+                context.Response.Cookies.Append(config["Cookie:Refresh"]!, refreshToken);
 
                 return Results.Ok();
             });
@@ -52,11 +57,15 @@ namespace Mokes.API.Endpoints
                     return Results.Unauthorized();
                 
                 var newToken = await tokenService.AuthTokenRefreshAsync(refreshToken);
-                if (newToken == null)
-                    return Results.Unauthorized();
-                
+                if (!newToken.IsSuccess)
+                {
+                    if (newToken.StatusCode == 502)
+                    {
+                        return Results.BadRequest(newToken.Error);
+                    }
+                }
                 context.Response.Cookies.Delete(config["Cookie:Auth"]!);
-                context.Response.Cookies.Append(config["Cookie:Auth"]!, newToken);
+                context.Response.Cookies.Append(config["Cookie:Auth"]!, newToken.Value!);
                 
                 return Results.Ok();
             });

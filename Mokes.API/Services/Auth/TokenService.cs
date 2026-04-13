@@ -14,19 +14,31 @@ public class TokenService : ITokenService
         _jwtHelper = jwtHelper;
         _repository = repository;
     }
-    public async Task<string?> AuthTokenRefreshAsync(string tokenIdentifier)
+    public async Task<Result<string>> AuthTokenRefreshAsync(string tokenIdentifier)
     {
         var token = await _repository.GetByIdentifierAsync(tokenIdentifier);
         if (token == null)
-            return null;
-        if (!token.IsActive || token.Expires <= DateTime.UtcNow) 
-            return null;
+            return new Result<string>
+            {
+                Error = "Токен не найден",
+                StatusCode = 502
+            };
+        if (!token.IsActive || token.Expires <= DateTime.UtcNow)
+            return new Result<string>
+            {
+                Error = "Токен недействителен",
+                StatusCode = 502
+            };
         
         var authToken = _jwtHelper.GenerateAuthToken(token.UserId);
-        return authToken;
+        return new Result<string>
+        {
+            StatusCode = 200,
+            Value = authToken
+        };
     }
 
-    public async Task<string?> GenerateRefreshTokenAsync(Guid userId)
+    public async Task<string> GenerateRefreshTokenAsync(Guid userId)
     {
         var token = new RefreshToken
         {

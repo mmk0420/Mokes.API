@@ -5,6 +5,6 @@ namespace Mokes.API.Services.Auth
     public interface IAuthService
     {
         Task<UserResponseDto?> Register(RegisterUserDto registerUserDto);
-        Task<(string authToken, string refreshToken)?> Login(LoginUserDto loginUserDto);
+        Task<Result<(string authToken, string refreshToken)>> Login(LoginUserDto loginUserDto);
     }
 }
