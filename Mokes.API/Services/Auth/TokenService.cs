@@ -1,4 +1,5 @@
-﻿using Mokes.API.Models;
+﻿using System.Security.Cryptography;
+using Mokes.API.Models;
 using Mokes.API.Repositories.Token;
 using Mokes.API.Utils;
 
@@ -13,7 +14,7 @@ public class TokenService : ITokenService
         _jwtHelper = jwtHelper;
         _repository = repository;
     }
-    public async Task<string?> AuthTokenRefreshAsyns(Guid tokenIdentifier)
+    public async Task<string?> AuthTokenRefreshAsync(string tokenIdentifier)
     {
         var token = await _repository.GetByIdentifierAsync(tokenIdentifier);
         if (token == null)
@@ -25,11 +26,11 @@ public class TokenService : ITokenService
         return authToken;
     }
 
-    public async Task<Guid?> GenerateRefreshTokenAsync(Guid userId)
+    public async Task<string?> GenerateRefreshTokenAsync(Guid userId)
     {
         var token = new RefreshToken
         {
-            Token = Guid.NewGuid(),
+            Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
             Expires = DateTime.UtcNow.AddDays(7),
             IsActive = true,
             UserId = userId

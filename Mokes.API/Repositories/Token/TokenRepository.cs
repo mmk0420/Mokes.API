@@ -24,7 +24,7 @@ public class TokenRepository : ITokenRepository
             .FirstOrDefaultAsync(t => t.Id == tokenId);
     }
 
-    public async Task<RefreshToken?> GetByIdentifierAsync(Guid tokenIdentifier)
+    public async Task<RefreshToken?> GetByIdentifierAsync(string tokenIdentifier)
     {
         return await _database.RefreshTokens
             .AsNoTracking()

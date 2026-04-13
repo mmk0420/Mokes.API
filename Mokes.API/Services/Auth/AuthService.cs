@@ -19,7 +19,7 @@ namespace Mokes.API.Services.Auth
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<(string, Guid)?> Login(LoginUserDto dto)
+        public async Task<(string authToken, string refreshToken)?> Login(LoginUserDto dto)
         {
             var user = await _repository.GetByUsernameAsync(dto.Username);
             if (user == null || !_passwordHasher.Verify(dto.Password, user.HashedPassword))
@@ -29,11 +29,11 @@ namespace Mokes.API.Services.Auth
             if (refreshToken == null)
                 return null;
             
-            var authToken = await _tokenService.AuthTokenRefreshAsyns((Guid)refreshToken);
+            var authToken = await _tokenService.AuthTokenRefreshAsync(refreshToken);
             if (authToken == null)
                 return null;
             
-            return (authToken, (Guid)refreshToken);
+            return (authToken, refreshToken);
         }
 
         public async Task<UserResponseDto?> Register(RegisterUserDto dto)
@@ -44,7 +44,7 @@ namespace Mokes.API.Services.Auth
 
             var newUser = new User
             {
-                AccountCreated = DateTime.Now,
+                AccountCreated = DateTime.UtcNow,
                 Email = dto.Email,
                 Username = dto.Username,
                 HashedPassword = _passwordHasher.Hash(dto.Password)

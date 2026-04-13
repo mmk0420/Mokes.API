@@ -4,6 +4,6 @@ namespace Mokes.API.Services.Auth;
 
 public interface ITokenService
 {
-    Task<string?> AuthTokenRefreshAsyns(Guid tokenIdentifier);
-    Task<Guid?> GenerateRefreshTokenAsync(Guid userId);
+    Task<string?> AuthTokenRefreshAsync(string tokenIdentifier);
+    Task<string?> GenerateRefreshTokenAsync(Guid userId);
 }

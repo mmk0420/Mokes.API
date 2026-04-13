@@ -36,7 +36,7 @@ namespace Mokes.API.Endpoints
                 context.Response.Cookies.Append(config["Cookie:Auth"]!, authToken);
                 context.Response.Cookies.Append(config["Cookie:Refresh"]!, refreshToken.ToString());
 
-                return Results.Ok(tokens);
+                return Results.Ok();
             });
 
             group.MapPost("/logout", (HttpContext context, IConfiguration config) => 
@@ -51,7 +51,7 @@ namespace Mokes.API.Endpoints
                 if  (refreshToken == null)
                     return Results.Unauthorized();
                 
-                var newToken = await tokenService.AuthTokenRefreshAsyns(Guid.Parse(refreshToken));
+                var newToken = await tokenService.AuthTokenRefreshAsync(refreshToken);
                 if (newToken == null)
                     return Results.Unauthorized();
                 
