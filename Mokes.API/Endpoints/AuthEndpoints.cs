@@ -55,17 +55,22 @@ namespace Mokes.API.Endpoints
                 var refreshToken = context.Request.Cookies[config["Cookie:Refresh"]!];
                 if  (refreshToken == null)
                     return Results.Unauthorized();
+                var userId = Guid.Parse(context.User.FindFirst("userId").Value);
                 
-                var newToken = await tokenService.AuthTokenRefreshAsync(refreshToken);
-                if (!newToken.IsSuccess)
+                var newAuthToken = await tokenService.AuthTokenRefreshAsync(refreshToken);
+                if (!newAuthToken.IsSuccess)
                 {
-                    if (newToken.StatusCode == 502)
+                    if (newAuthToken.StatusCode == 502)
                     {
-                        return Results.BadRequest(newToken.Error);
+                        return Results.BadRequest(newAuthToken.Error);
                     }
                 }
+                var newRefreshToken = await tokenService.GenerateRefreshTokenAsync(userId);
+                
+                context.Response.Cookies.Delete(config["Cookie:Refresh"]!);
+                context.Response.Cookies.Append(config["Cookie:Refresh"]!, newRefreshToken);
                 context.Response.Cookies.Delete(config["Cookie:Auth"]!);
-                context.Response.Cookies.Append(config["Cookie:Auth"]!, newToken.Value!);
+                context.Response.Cookies.Append(config["Cookie:Auth"]!, newAuthToken.Value!);
                 
                 return Results.Ok();
             });
